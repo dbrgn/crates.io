@@ -13,6 +13,7 @@ export default DS.Model.extend({
     mailing_list: DS.attr('string'),
     issues: DS.attr('string'),
     documentation: DS.attr('string'),
+    changelog: DS.attr('string'),
     repository: DS.attr('string'),
     license: DS.attr('string'),
 

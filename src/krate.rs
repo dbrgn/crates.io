@@ -47,6 +47,7 @@ pub struct Crate {
     pub description: Option<String>,
     pub homepage: Option<String>,
     pub documentation: Option<String>,
+    pub changelog: Option<String>,
     pub readme: Option<String>,
     pub keywords: Vec<String>,
     pub license: Option<String>,
@@ -66,6 +67,7 @@ pub struct EncodableCrate {
     pub description: Option<String>,
     pub homepage: Option<String>,
     pub documentation: Option<String>,
+    pub changelog: Option<String>,
     pub keywords: Vec<String>,
     pub license: Option<String>,
     pub repository: Option<String>,
@@ -98,6 +100,7 @@ impl Crate {
                           description: &Option<String>,
                           homepage: &Option<String>,
                           documentation: &Option<String>,
+                          changelog: &Option<String>,
                           readme: &Option<String>,
                           keywords: &[String],
                           repository: &Option<String>,
@@ -108,6 +111,7 @@ impl Crate {
         let description = description.as_ref().map(|s| &s[..]);
         let homepage = homepage.as_ref().map(|s| &s[..]);
         let documentation = documentation.as_ref().map(|s| &s[..]);
+        let changelog = changelog.as_ref().map(|s| &s[..]);
         let readme = readme.as_ref().map(|s| &s[..]);
         let repository = repository.as_ref().map(|s| &s[..]);
         let mut license = license.as_ref().map(|s| &s[..]);
@@ -115,6 +119,7 @@ impl Crate {
         let keywords = keywords.join(",");
         try!(validate_url(homepage, "homepage"));
         try!(validate_url(documentation, "documentation"));
+        try!(validate_url(changelog, "changelog"));
         try!(validate_url(repository, "repository"));
 
         match license {
@@ -140,13 +145,14 @@ impl Crate {
                                              readme = $4,
                                              keywords = $5,
                                              license = $6,
-                                             repository = $7
+                                             repository = $7,
+                                             changelog = $8
                                        WHERE canon_crate_name(name) =
-                                             canon_crate_name($8)
+                                             canon_crate_name($9)
                                    RETURNING *"));
         let rows = try!(stmt.query(&[&documentation, &homepage,
                                      &description, &readme, &keywords,
-                                     &license, &repository,
+                                     &license, &repository, &changelog,
                                      &name]));
         match rows.iter().next() {
             Some(row) => return Ok(Model::from_row(&row)),
@@ -161,13 +167,13 @@ impl Crate {
         }
 
         let stmt = try!(conn.prepare("INSERT INTO crates
-                                      (name, user_id, description, homepage,
+                                      (name, user_id, description, homepage, changelog,
                                        documentation, readme, keywords,
                                        repository, license, max_upload_size)
-                                      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+                                      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
                                       RETURNING *"));
         let rows = try!(stmt.query(&[&name, &user_id,
-                                     &description, &homepage,
+                                     &description, &homepage, &changelog,
                                      &documentation, &readme, &keywords,
                                      &repository, &license, &max_upload_size]));
         let ret: Crate = Model::from_row(&try!(rows.iter().next().chain_error(|| {
@@ -239,7 +245,7 @@ impl Crate {
     pub fn encodable(self, versions: Option<Vec<i32>>) -> EncodableCrate {
         let Crate {
             name, created_at, updated_at, downloads, max_version, description,
-            homepage, documentation, keywords, license, repository,
+            homepage, documentation, changelog, keywords, license, repository,
             readme: _, id: _, user_id: _, max_upload_size: _,
         } = self;
         let versions_link = match versions {
@@ -255,6 +261,7 @@ impl Crate {
             versions: versions,
             max_version: max_version.to_string(),
             documentation: documentation,
+            changelog: changelog,
             homepage: homepage,
             description: description,
             keywords: keywords,
@@ -441,6 +448,7 @@ impl Model for Crate {
             downloads: row.get("downloads"),
             description: row.get("description"),
             documentation: row.get("documentation"),
+            changelog: row.get("changelog"),
             homepage: row.get("homepage"),
             readme: row.get("readme"),
             max_version: semver::Version::parse(&max).unwrap(),
@@ -665,6 +673,7 @@ pub fn new(req: &mut Request) -> CargoResult<Response> {
                                                &new_crate.description,
                                                &new_crate.homepage,
                                                &new_crate.documentation,
+                                               &new_crate.changelog,
                                                &new_crate.readme,
                                                &keywords,
                                                &new_crate.repository,

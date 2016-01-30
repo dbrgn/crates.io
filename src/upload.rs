@@ -18,6 +18,7 @@ pub struct NewCrate {
     pub description: Option<String>,
     pub homepage: Option<String>,
     pub documentation: Option<String>,
+    pub changelog: Option<String>,
     pub readme: Option<String>,
     pub keywords: Option<KeywordList>,
     pub license: Option<String>,

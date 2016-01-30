@@ -321,6 +321,8 @@ fn migrations() -> Vec<Migration> {
                               "VARCHAR"),
         Migration::add_column(20141007171517, "crates", "documentation",
                               "VARCHAR"),
+        Migration::add_column(20160130020900, "crates", "changelog",
+                              "VARCHAR"),
         Migration::add_column(20141010150327, "crates", "readme", "VARCHAR"),
         Migration::add_column(20141013115510, "versions", "yanked",
                               "BOOLEAN DEFAULT FALSE"),

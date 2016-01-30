@@ -174,7 +174,7 @@ mod test {
         let tx = conn.transaction().unwrap();
         let user = user(&tx);
         let krate = Crate::find_or_insert(&tx, "foo", user.id, &None, &None,
-                                          &None, &None, &[], &None, &None,
+                                          &None, &None, &None, &[], &None, &None,
                                           &None, None).unwrap();
         let version = Version::insert(&tx, krate.id,
                                       &semver::Version::parse("1.0.0").unwrap(),
@@ -201,7 +201,7 @@ mod test {
         let tx = conn.transaction().unwrap();
         let user = user(&tx);
         let krate = Crate::find_or_insert(&tx, "foo", user.id, &None,
-                                          &None, &None, &None, &[], &None,
+                                          &None, &None, &None, &None, &[], &None,
                                           &None, &None, None).unwrap();
         let version = Version::insert(&tx, krate.id,
                                       &semver::Version::parse("1.0.0").unwrap(),
@@ -224,7 +224,7 @@ mod test {
         let tx = conn.transaction().unwrap();
         let user = user(&tx);
         let krate = Crate::find_or_insert(&tx, "foo", user.id, &None,
-                                          &None, &None, &None, &[], &None,
+                                          &None, &None, &None, &None, &[], &None,
                                           &None, &None, None).unwrap();
         let version = Version::insert(&tx, krate.id,
                                       &semver::Version::parse("1.0.0").unwrap(),
@@ -248,7 +248,7 @@ mod test {
         let tx = conn.transaction().unwrap();
         let user = user(&tx);
         let krate = Crate::find_or_insert(&tx, "foo", user.id, &None,
-                                          &None, &None, &None, &[], &None,
+                                          &None, &None, &None, &None, &[], &None,
                                           &None, &None, None).unwrap();
         let version = Version::insert(&tx, krate.id,
                                       &semver::Version::parse("1.0.0").unwrap(),
@@ -288,7 +288,7 @@ mod test {
         let tx = conn.transaction().unwrap();
         let user = user(&tx);
         let krate = Crate::find_or_insert(&tx, "foo", user.id, &None,
-                                          &None, &None, &None, &[], &None,
+                                          &None, &None, &None, &None, &[], &None,
                                           &None, &None, None).unwrap();
         let version = Version::insert(&tx, krate.id,
                                       &semver::Version::parse("1.0.0").unwrap(),

@@ -43,6 +43,7 @@ fn new_crate(name: &str) -> u::NewCrate {
         description: Some("desc".to_string()),
         homepage: None,
         documentation: None,
+        changelog: None,
         readme: None,
         keywords: None,
         license: Some("MIT".to_string()),
@@ -130,6 +131,7 @@ fn show() {
     let mut krate = ::krate("foo");
     krate.description = Some(format!("description"));
     krate.documentation = Some(format!("https://example.com"));
+    krate.changelog = Some(format!("https://example.com/CHANGELOG.md"));
     krate.homepage = Some(format!("http://example.com"));
     ::mock_crate(&mut req, krate.clone());
 
@@ -140,6 +142,7 @@ fn show() {
     assert_eq!(json.krate.description, krate.description);
     assert_eq!(json.krate.homepage, krate.homepage);
     assert_eq!(json.krate.documentation, krate.documentation);
+    assert_eq!(json.krate.changelog, krate.changelog);
     let versions = json.krate.versions.as_ref().unwrap();
     assert_eq!(versions.len(), 1);
     assert_eq!(json.versions.len(), 1);
